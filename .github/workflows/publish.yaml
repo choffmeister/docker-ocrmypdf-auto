@@ -1,0 +1,28 @@
+name: Publish
+on:
+  push:
+    tags:
+    - "*"
+permissions:
+  contents: read
+  packages: write
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: docker/setup-qemu-action@v3
+    - uses: docker/setup-buildx-action@v3
+    - uses: docker/login-action@v2
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    - name: Publish
+      run: docker buildx build --platform linux/amd64,linux/arm64/v8 --pull --push -t ${IMAGE}:${VERSION} .
+      env:
+        IMAGE: ghcr.io/choffmeister/ocrmypdf-auto
+        VERSION: ${{ github.ref_name }}
+ 

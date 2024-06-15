@@ -41,11 +41,10 @@ while True:
         try:
             run('ocrmypdf', [
                 '-l', os.environ['OCRMYPDF_LANGUAGE'],
+                '--jobs', os.environ['OCRMYPDF_JOBS'],
                 '--rotate-pages',
                 '--deskew',
-                '--remove-background',
                 '--optimize', '3',
-                '--jobs', '4',
                 '--output-type', 'pdfa',
                 file_in,
                 file_out
